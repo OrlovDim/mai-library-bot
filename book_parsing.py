@@ -14,21 +14,29 @@ send_data = {
     "filter_dateTo": ""
 }
 
+class Book:
+    authors = None
+    keywords = None
+    title = None
+    annotation = None
 
-def find_book(keyword):
+
+def find_book(keyword, quantity):
+    book_lst = [Book() for _ in range(quantity)]
     book_work.get(url_main, headers=headers)
     send_data["simpleCond"] = keyword
     response = book_work.post(url_search, headers=headers, data=send_data, allow_redirects=True)
     soup = BeautifulSoup(response.text, "lxml")
     data = soup.find_all("div", class_="rs-data")
-    for i in range(4): # разумно парсить первые четыре книги
-        authors = data.find("div", class_="rs-item findByDict IDX100a")
-        keywords = data.find("div", class_="rs-item findByDict IDX653a")
-        title = data.find("div", class_="rs-item")
-        authors = authors.text.replace("Авторы: ", "")
-        keyword = keywords.text.replace("Ключевые слова: ", "")
-        title = title.text.split("   ")[-1]
-    return 
+    for i in range(quantity):
 
-
-find_book("Общая физика") # демонстрация работы
+        authors = data[i].find("div", class_="rs-item findByDict IDX100a")
+        keywords = data[i].find("div", class_="rs-item findByDict IDX653a")
+        items = data[i].find_all("div", class_="rs-item")
+        title = items[0]
+        book_lst[i].authors = authors.text.replace("Авторы: ", "").split(", ")
+        book_lst[i].keywords = keywords.text.replace("Ключевые слова: ", "").split(", ")
+        book_lst[i].title = title.text.split("   ")[-1]
+        if items[4].text[:10] == "Аннотация:":
+            book_lst[i].annotation = items[4].text[10:]
+    return book_lst
