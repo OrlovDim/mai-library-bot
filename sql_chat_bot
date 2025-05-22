@@ -1,7 +1,7 @@
 sqlite3 chat_bot.db
 
 CREATE TABLE Group_ (group_id integer PRIMARY KEY,
-	group_num character(14),
+	group_num character(16),
 	institute_num integer);
 
 CREATE TABLE Recomendation (rec_id integer PRIMARY KEY,
@@ -9,18 +9,18 @@ CREATE TABLE Recomendation (rec_id integer PRIMARY KEY,
 	group_id integer);
     
 CREATE TABLE Book (book_id integer PRIMARY KEY,
-	title text,
-	annotetion text);
+	title text);
     
 CREATE TABLE Keyword (keyword_id integer PRIMARY KEY,
-	word character(128),
-	book_id integer);
+	book_id integer,
+	word character(128));
 
 CREATE TABLE Author (author_id integer PRIMARY KEY,
 	name character(128));
 	
-CREATE TABLE Authorship (author_id integer PRIMARY KEY,
-	book_id integer);
+CREATE TABLE Authorship (authorship_id integer PRIMARY KEY,
+	book_id integer,
+	author_id integer);
 
 CREATE TABLE Annotation (book_id integer PRIMARY KEY,
 	payload text);
